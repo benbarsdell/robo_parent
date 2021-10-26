@@ -1,0 +1,81 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://bounce_enemy.gd" type="Script" id=1]
+[ext_resource path="res://assets/images/enemies.png" type="Texture" id=2]
+[ext_resource path="res://bouncer.gd" type="Script" id=3]
+[ext_resource path="res://assets/sounds/hit_sound_cropped.wav" type="AudioStream" id=4]
+[ext_resource path="res://assets/sounds/hit_sound4.wav" type="AudioStream" id=5]
+[ext_resource path="res://assets/sounds/chirp_sound.wav" type="AudioStream" id=6]
+[ext_resource path="res://assets/sounds/chirp_sound2.wav" type="AudioStream" id=7]
+
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 1.0
+height = 4.0
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 32.0156
+
+[sub_resource type="CircleShape2D" id=3]
+radius = 3.16228
+
+[node name="BounceEnemy" type="KinematicBody2D"]
+collision_layer = 4
+collision_mask = 5
+script = ExtResource( 1 )
+max_run_speed = 30.0
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 0, -4 )
+texture = ExtResource( 2 )
+hframes = 2
+vframes = 32
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, -1 )
+rotation = 1.5708
+shape = SubResource( 1 )
+
+[node name="PlayerSensor" type="Area2D" parent="."]
+collision_layer = 32
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerSensor"]
+shape = SubResource( 2 )
+
+[node name="Bouncer" type="KinematicBody2D" parent="."]
+collision_layer = 16
+collision_mask = 10
+script = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bouncer"]
+shape = SubResource( 3 )
+
+[node name="PlayerHitSound" type="AudioStreamPlayer2D" parent="Bouncer"]
+stream = ExtResource( 4 )
+bus = "Effects"
+
+[node name="ProjectileHitSound" type="AudioStreamPlayer2D" parent="Bouncer"]
+stream = ExtResource( 5 )
+volume_db = -6.0
+bus = "Effects"
+
+[node name="GroundDetectorLeft" type="RayCast2D" parent="."]
+position = Vector2( -3, 0 )
+enabled = true
+cast_to = Vector2( 0, 4 )
+
+[node name="GroundDetectorRight" type="RayCast2D" parent="."]
+position = Vector2( 3, 0 )
+enabled = true
+cast_to = Vector2( 0, 4 )
+
+[node name="PlayerDetectSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 6 )
+bus = "Effects"
+
+[node name="PlayerLostSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 7 )
+bus = "Effects"
+
+[connection signal="body_entered" from="PlayerSensor" to="." method="_on_PlayerSensor_body_entered"]
+[connection signal="body_exited" from="PlayerSensor" to="." method="_on_PlayerSensor_body_exited"]

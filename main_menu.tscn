@@ -1,0 +1,178 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://main_menu.gd" type="Script" id=1]
+[ext_resource path="res://main_theme.tres" type="Theme" id=2]
+[ext_resource path="res://assets/sounds/powerup_sound1.wav" type="AudioStream" id=3]
+[ext_resource path="res://assets/music/piano-romantisme.mp3" type="AudioStream" id=4]
+[ext_resource path="res://assets/fonts/lanapixel_everything/LanaPixel.ttf" type="DynamicFontData" id=5]
+
+[sub_resource type="DynamicFont" id=1]
+size = 33
+font_data = ExtResource( 5 )
+
+[node name="MainMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 2 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BackgroundRect" type="ColorRect" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -320.0
+margin_top = -180.0
+margin_right = 320.0
+margin_bottom = 180.0
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -135.0
+margin_top = -138.5
+margin_right = 135.0
+margin_bottom = 138.5
+custom_constants/separation = 19
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+margin_right = 270.0
+margin_bottom = 71.0
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color_shadow = Color( 0.854902, 0.54902, 0.113725, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+text = "Robo-Parent
+of the Year"
+align = 1
+
+[node name="Buttons" type="VBoxContainer" parent="VBoxContainer"]
+margin_top = 90.0
+margin_right = 270.0
+margin_bottom = 164.0
+custom_constants/separation = 10
+
+[node name="NewGameButton" type="Button" parent="VBoxContainer/Buttons"]
+margin_right = 270.0
+margin_bottom = 18.0
+text = "New Game"
+
+[node name="CreditsButton" type="Button" parent="VBoxContainer/Buttons"]
+margin_top = 28.0
+margin_right = 270.0
+margin_bottom = 46.0
+text = "Credits"
+
+[node name="QuitButton" type="Button" parent="VBoxContainer/Buttons"]
+margin_top = 56.0
+margin_right = 270.0
+margin_bottom = 74.0
+text = "Quit"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 183.0
+margin_right = 270.0
+margin_bottom = 201.0
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+margin_top = 3.0
+margin_right = 41.0
+margin_bottom = 15.0
+text = "Difficulty:"
+
+[node name="DifficultyMenu" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
+margin_left = 45.0
+margin_right = 270.0
+margin_bottom = 18.0
+rect_min_size = Vector2( 225, 0 )
+text = "Very hard"
+items = [ "Very hard", null, false, 0, null, "Very hard", null, false, 1, null, "Very hard", null, false, 2, null ]
+selected = 0
+
+[node name="VolumeControl" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 220.0
+margin_right = 270.0
+margin_bottom = 256.0
+
+[node name="Labels" type="VBoxContainer" parent="VBoxContainer/VolumeControl"]
+margin_right = 66.0
+margin_bottom = 36.0
+
+[node name="EffectsVolumeLabel" type="Label" parent="VBoxContainer/VolumeControl/Labels"]
+margin_right = 66.0
+margin_bottom = 12.0
+text = "Effects volume:"
+
+[node name="MusicVolumeLabel" type="Label" parent="VBoxContainer/VolumeControl/Labels"]
+margin_top = 16.0
+margin_right = 66.0
+margin_bottom = 28.0
+text = "Music volume:"
+
+[node name="Sliders" type="VBoxContainer" parent="VBoxContainer/VolumeControl"]
+margin_left = 70.0
+margin_right = 270.0
+margin_bottom = 36.0
+
+[node name="EffectsVolumeSlider" type="HSlider" parent="VBoxContainer/VolumeControl/Sliders"]
+margin_right = 200.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 200, 0 )
+min_value = -65.0
+max_value = 0.0
+step = 5.0
+
+[node name="MusicVolumeSlider" type="HSlider" parent="VBoxContainer/VolumeControl/Sliders"]
+margin_top = 20.0
+margin_right = 200.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 150, 0 )
+min_value = -65.0
+max_value = 0.0
+step = 5.0
+
+[node name="ShowTimerCheckbox" type="CheckBox" parent="VBoxContainer"]
+margin_top = 275.0
+margin_right = 270.0
+margin_bottom = 299.0
+text = "Show timer"
+
+[node name="ExampleSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+bus = "Effects"
+
+[node name="ExampleMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+bus = "Music"
+
+[node name="ExampleMusicTimer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[node name="Label" type="Label" parent="."]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -12.0
+margin_right = 40.0
+text = "v1.0"
+align = 1
+
+[connection signal="pressed" from="VBoxContainer/Buttons/NewGameButton" to="." method="_on_NewGameButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/Buttons/CreditsButton" to="." method="_on_CreditsButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/Buttons/QuitButton" to="." method="_on_QuitButton_pressed"]
+[connection signal="value_changed" from="VBoxContainer/VolumeControl/Sliders/EffectsVolumeSlider" to="." method="_on_EffectsVolumeSlider_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/VolumeControl/Sliders/MusicVolumeSlider" to="." method="_on_MusicVolumeSlider_value_changed"]
+[connection signal="toggled" from="VBoxContainer/ShowTimerCheckbox" to="." method="_on_ShowTimerCheckbox_toggled"]
+[connection signal="timeout" from="ExampleMusicTimer" to="." method="_on_ExampleMusicTimer_timeout"]

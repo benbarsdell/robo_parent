@@ -1,0 +1,146 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://assets/fonts/lanapixel_everything/LanaPixel.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://richtext_clickable_urls.gd" type="Script" id=2]
+[ext_resource path="res://credits.gd" type="Script" id=3]
+[ext_resource path="res://assets/music/piano-romantisme.mp3" type="AudioStream" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+size = 11
+font_data = ExtResource( 1 )
+
+[sub_resource type="Animation" id=2]
+resource_name = "scroll"
+length = 50.0
+step = 5.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("CreditsText:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 50 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 360 ), Vector2( 0, -500 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("HappyMusic:volume_db")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 40, 50 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.0, -30.0 ]
+}
+
+[node name="Credits" type="Control"]
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 640.0
+margin_bottom = 360.0
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CreditsText" type="RichTextLabel" parent="."]
+margin_top = 360.0
+margin_right = 640.0
+margin_bottom = 860.0
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "
+
+
+Created for Ludwig Jam, Oct 2021
+Thank you to Ludwig, Ottomated, and everyone who contributed to the Jam!
+
+
+Full source code and assets available at:
+[url=https://github.com/benbarsdell/robo_parent]github.com/benbarsdell/robo_parent[/url]
+
+
+Game design: Ben Barsdell
+Programming: Ben Barsdell
+Programmer art: Ben Barsdell
+
+
+Made using the Godot engine
+[url=https://godotengine.org/license]godotengine.org/license[/url]
+
+
+Pixel art created in Aseprite
+[url=https://www.aseprite.org]www.aseprite.org[/url]
+
+
+Font: LanaPixel font © 2020 eishiya
+[url=https://opengameart.org/content/lanapixel-localization-friendly-pixel-font]opengameart.org/content/lanapixel-localization-friendly-pixel-font[/url]
+
+
+Sound effects created in DrPetter's SFXR
+[url=http://www.drpetter.se/project_sfxr.html]www.drpetter.se/project_sfxr.html[/url]
+
+
+Music
+Piano Romantisme by Shane Ivers - [url=https://www.silvermansound.com]www.silvermansound.com[/url]
+Endings by Shane Ivers - [url=https://www.silvermansound.com]www.silvermansound.com[/url]"
+text = "
+
+
+Created for Ludwig Jam, Oct 2021
+Thank you to Ludwig, Ottomated, and everyone who contributed to the Jam!
+
+
+Full source code and assets available at:
+github.com/benbarsdell/robo_parent
+
+
+Game design: Ben Barsdell
+Programming: Ben Barsdell
+Programmer art: Ben Barsdell
+
+
+Made using the Godot engine
+godotengine.org/license
+
+
+Pixel art created in Aseprite
+www.aseprite.org
+
+
+Font: LanaPixel font © 2020 eishiya
+opengameart.org/content/lanapixel-localization-friendly-pixel-font
+
+
+Sound effects created in DrPetter's SFXR
+www.drpetter.se/project_sfxr.html
+
+
+Music
+Piano Romantisme by Shane Ivers - www.silvermansound.com
+Endings by Shane Ivers - www.silvermansound.com"
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/scroll = SubResource( 2 )
+
+[node name="HappyMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+autoplay = true
+bus = "Music"
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
