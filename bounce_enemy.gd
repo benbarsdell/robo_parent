@@ -34,7 +34,6 @@ func _physics_process(delta):
 
 
 func _on_PlayerSensor_body_entered(body):
-	print("_on_PlayerSensor_body_entered")
 	player_detect_sound.play()
 	# TODO: Can/should use a ray-cast to check for LOS to player?
 	_player = body
@@ -42,7 +41,6 @@ func _on_PlayerSensor_body_entered(body):
 
 
 func _on_PlayerSensor_body_exited(body):
-	print("_on_PlayerSensor_body_exited")
 	player_lost_sound.play()
 	_set_mode(MODE_IDLE)
 

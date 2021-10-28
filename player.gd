@@ -1,6 +1,9 @@
 extends Actor
 class_name Player
 
+
+const JUMP_SPEED_NORMAL := 155
+const JUMP_SPEED_BRUTAL := 150 # Note: It's possible down to 147, but requires pixel perfection
 export var max_jump_count := 2 # 2 => double-jump
 var is_jumping := false
 var jump_count := 0
@@ -13,17 +16,20 @@ onready var ignore_ground_sensor: RayCast2D = $IgnoreGroundSensor
 onready var jump_sound := $JumpSound
 onready var double_jump_sound := $DoubleJumpSound
 onready var hit_ground_sound := $HitGroundSound
+onready var camera := get_node("Camera")
 
 
 func get_state() -> Dictionary:
 	var state = .get_state()
 	state.gun_rotation = gun.rotation
+	state.jump_count = jump_count
 	return state
 
 
 func set_state(state: Dictionary) -> void:
 	.set_state(state)
 	gun.rotation = state.gun_rotation
+	jump_count = state.jump_count
 
 
 func on_grab_balloon(balloon_):
@@ -38,17 +44,24 @@ func on_release_balloon(balloon_):
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	gun.visible = false
-	pass # Replace with function body.
 
 
 func _physics_process(_delta):
+	if Globals.difficulty == Globals.DIFFICULTY_BRUTAL:
+		jump_speed = JUMP_SPEED_BRUTAL
+	else:
+		jump_speed = JUMP_SPEED_NORMAL
+	
 	var direction := _get_direction()
 	
 	var was_on_floor := is_on_floor()
+	var old_velocity_y := _velocity.y
 	move(direction)
-	# TODO: This seems to have too much delay to work well.
-	#if is_on_floor() and not was_on_floor:
-	#	hit_ground_sound.play()
+	if is_on_floor() and not was_on_floor:
+		if old_velocity_y > 0.9 * default_max_fall_speed:
+			$CameraShakeTimer.start()
+			# TODO: There's a lot of delay in this, not sure how to avoid it.
+			hit_ground_sound.play()
 	
 	for i in get_slide_count():
 		var collision := get_slide_collision(i)
@@ -73,6 +86,12 @@ func _physics_process(_delta):
 	$Sprite.flip_h = looking_left
 	$AnimatedSprite.flip_h = looking_left
 	$Gun/Sprite.flip_v = looking_left
+	
+	if not $CameraShakeTimer.is_stopped():
+		var shake_amount = 1.0 * $CameraShakeTimer.time_left / $CameraShakeTimer.wait_time
+		camera.set_offset(Vector2(
+			rand_range(-1.0, 1.0) * shake_amount,
+			rand_range(-1.0, 1.0) * shake_amount))
 
 
 func _get_direction() -> Vector2:
@@ -83,12 +102,32 @@ func _get_direction() -> Vector2:
 	#var jumped := is_on_floor() and Input.is_action_pressed("ui_up")
 	if is_on_ground:
 		jump_count = 0
+	var jump_condition := false
+	if Globals.difficulty >= Globals.DIFFICULTY_HARD:
+		# Can only jump from ground or after a jump.
+		jump_condition = is_on_ground or (jump_count > 0 and jump_count < max_jump_count)
+	elif Globals.difficulty == Globals.DIFFICULTY_NORMAL:
+		# Can jump once after falling.
+		jump_condition = is_on_ground or jump_count < max_jump_count
+	elif Globals.difficulty == Globals.DIFFICULTY_EASY:
+		# Can always double-jump, even after falling off a ledge.
+		jump_condition = is_on_ground or (jump_count >= 0 and jump_count < max_jump_count)
 	var jumped := (
 		can_jump and
 		Input.is_action_just_pressed("ui_up") and
-		(is_on_ground or (jump_count > 0 and jump_count < max_jump_count)))
+		jump_condition)
+		# TODO: Hard mode:
+		#*(is_on_ground or (jump_count > 0 and jump_count < max_jump_count)))
+		# TODO: Normal mode:
+		#(is_on_ground or jump_count < max_jump_count))
+		# TODO: Easy mode:
+		#(is_on_ground or (jump_count >= 0 and jump_count < max_jump_count)))
 	if jumped:
 		is_jumping = true
+		if Globals.difficulty == Globals.DIFFICULTY_NORMAL:
+			if not is_on_ground:# and jump_count == 1:
+				# Don't allow double-jump without jumping first.
+				jump_count += 1
 		if jump_count == 0:
 			jump_sound.play()
 		else:

@@ -18,4 +18,4 @@ func on_projectile_collision(projectile: RigidBody2D):
 	#         in agro mode. Should require ~2 shots to disable them (and they
 	#         should come back to life after ~10 secs).
 	projectile_hit_sound.play()
-	print("PROJECTILE COLLISION ", projectile.name)
+	#print("PROJECTILE COLLISION ", projectile.name)

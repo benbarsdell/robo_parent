@@ -10,6 +10,8 @@ func _ready():
 
 
 func _on_PlayerSensor_body_entered(body: Actor):
+	# Always allow exactly 1 jump after the bounce.
+	body.jump_count = 1
 	#body._velocity.y = -bounce_speed
 	var normal := -Vector2(cos(rotation + 0.5 * PI), sin(rotation + 0.5 * PI))
 	body._velocity = (

@@ -27,41 +27,83 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -85.0
-margin_top = -40.0
-margin_right = 85.0
-margin_bottom = 40.0
+margin_left = -124.0
+margin_top = -96.0
+margin_right = 124.0
+margin_bottom = 96.0
 custom_constants/separation = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Buttons" type="VBoxContainer" parent="VBoxContainer"]
-margin_right = 170.0
+margin_right = 248.0
 margin_bottom = 66.0
 custom_constants/separation = 6
 
 [node name="ContinueButton" type="Button" parent="VBoxContainer/Buttons"]
-margin_right = 170.0
+margin_right = 248.0
 margin_bottom = 18.0
-text = "Continue"
+text = "Resume"
 
 [node name="RestartButton" type="Button" parent="VBoxContainer/Buttons"]
 margin_top = 24.0
-margin_right = 170.0
+margin_right = 248.0
 margin_bottom = 42.0
 text = "Restart Game"
 
-[node name="ExitButton" type="Button" parent="VBoxContainer/Buttons"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Buttons"]
 margin_top = 48.0
-margin_right = 170.0
+margin_right = 248.0
 margin_bottom = 66.0
+alignment = 1
+
+[node name="ControlsButton" type="Button" parent="VBoxContainer/Buttons/HBoxContainer"]
+margin_right = 122.0
+margin_bottom = 18.0
+rect_min_size = Vector2( 122, 0 )
+text = "Controls"
+
+[node name="ExitButton" type="Button" parent="VBoxContainer/Buttons/HBoxContainer"]
+margin_left = 126.0
+margin_right = 248.0
+margin_bottom = 18.0
+rect_min_size = Vector2( 122, 0 )
 text = "Exit Game"
 
-[node name="VolumeControl" type="HBoxContainer" parent="VBoxContainer"]
+[node name="Difficulty" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 72.0
-margin_right = 170.0
-margin_bottom = 108.0
+margin_right = 248.0
+margin_bottom = 90.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Difficulty"]
+margin_top = 3.0
+margin_right = 41.0
+margin_bottom = 15.0
+text = "Difficulty:"
+
+[node name="DifficultyMenu" type="OptionButton" parent="VBoxContainer/Difficulty"]
+margin_left = 45.0
+margin_right = 234.0
+margin_bottom = 18.0
+text = "Normal (can jump once after falling)"
+items = [ "Easy (can double-jump after falling)", null, false, 0, null, "Normal (can jump once after falling)", null, false, 1, null, "Hard (cannot jump after falling)", null, false, 2, null, "Brutal (tighter jump timing like v1.0)", null, false, 3, null ]
+selected = 1
+
+[node name="Cheats" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 96.0
+margin_right = 248.0
+margin_bottom = 120.0
+
+[node name="CheatModeCheckbox" type="CheckBox" parent="VBoxContainer/Cheats"]
+margin_right = 244.0
+margin_bottom = 24.0
+text = "Practise mode (hold right mouse button to rewind)"
+
+[node name="VolumeControl" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 126.0
+margin_right = 248.0
+margin_bottom = 162.0
 
 [node name="Labels" type="VBoxContainer" parent="VBoxContainer/VolumeControl"]
 margin_right = 66.0
@@ -100,10 +142,20 @@ min_value = -65.0
 max_value = 0.0
 step = 5.0
 
-[node name="ShowTimerCheckbox" type="CheckBox" parent="VBoxContainer"]
-margin_top = 114.0
-margin_right = 170.0
-margin_bottom = 138.0
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 168.0
+margin_right = 248.0
+margin_bottom = 192.0
+
+[node name="FullscreenCheckbox" type="CheckBox" parent="VBoxContainer/HBoxContainer"]
+margin_right = 70.0
+margin_bottom = 24.0
+text = "Fullscreen"
+
+[node name="ShowTimerCheckbox" type="CheckBox" parent="VBoxContainer/HBoxContainer"]
+margin_left = 74.0
+margin_right = 149.0
+margin_bottom = 24.0
 text = "Show timer"
 
 [node name="ExampleSound" type="AudioStreamPlayer" parent="."]
@@ -112,7 +164,11 @@ bus = "Effects"
 
 [connection signal="pressed" from="VBoxContainer/Buttons/ContinueButton" to="." method="_on_ContinueButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/Buttons/RestartButton" to="." method="_on_RestartButton_pressed"]
-[connection signal="pressed" from="VBoxContainer/Buttons/ExitButton" to="." method="_on_ExitButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/Buttons/HBoxContainer/ControlsButton" to="." method="_on_ControlsButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/Buttons/HBoxContainer/ExitButton" to="." method="_on_ExitButton_pressed"]
+[connection signal="item_selected" from="VBoxContainer/Difficulty/DifficultyMenu" to="." method="_on_DifficultyMenu_item_selected"]
+[connection signal="toggled" from="VBoxContainer/Cheats/CheatModeCheckbox" to="." method="_on_CheatModeCheckbox_toggled"]
 [connection signal="value_changed" from="VBoxContainer/VolumeControl/Sliders/EffectsSlider" to="." method="_on_EffectsSlider_value_changed"]
 [connection signal="value_changed" from="VBoxContainer/VolumeControl/Sliders/MusicSlider" to="." method="_on_MusicSlider_value_changed"]
-[connection signal="toggled" from="VBoxContainer/ShowTimerCheckbox" to="." method="_on_ShowTimerCheckbox_toggled"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer/FullscreenCheckbox" to="." method="_on_FullscreenCheckbox_toggled"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer/ShowTimerCheckbox" to="." method="_on_ShowTimerCheckbox_toggled"]

@@ -6,7 +6,7 @@
 [ext_resource path="res://assets/images/player.png" type="Texture" id=4]
 [ext_resource path="res://assets/sounds/jump_sound2.wav" type="AudioStream" id=5]
 [ext_resource path="res://assets/sounds/jump_sound1.wav" type="AudioStream" id=6]
-[ext_resource path="res://assets/sounds/hit_ground_sound.wav" type="AudioStream" id=7]
+[ext_resource path="res://assets/sounds/hit_ground_sound2.wav" type="AudioStream" id=7]
 [ext_resource path="res://assets/images/gun.png" type="Texture" id=8]
 
 [sub_resource type="AtlasTexture" id=1]
@@ -35,27 +35,27 @@ region = Rect2( 40, 0, 8, 16 )
 
 [sub_resource type="AtlasTexture" id=7]
 atlas = ExtResource( 4 )
-region = Rect2( 0, 16, 8, 16 )
+region = Rect2( 0, 32, 8, 16 )
 
 [sub_resource type="AtlasTexture" id=8]
 atlas = ExtResource( 4 )
-region = Rect2( 8, 16, 8, 16 )
+region = Rect2( 8, 32, 8, 16 )
 
 [sub_resource type="AtlasTexture" id=9]
 atlas = ExtResource( 4 )
-region = Rect2( 16, 16, 8, 16 )
+region = Rect2( 16, 32, 8, 16 )
 
 [sub_resource type="AtlasTexture" id=10]
 atlas = ExtResource( 4 )
-region = Rect2( 24, 16, 8, 16 )
+region = Rect2( 24, 32, 8, 16 )
 
 [sub_resource type="AtlasTexture" id=11]
 atlas = ExtResource( 4 )
-region = Rect2( 32, 16, 8, 16 )
+region = Rect2( 32, 32, 8, 16 )
 
 [sub_resource type="AtlasTexture" id=12]
 atlas = ExtResource( 4 )
-region = Rect2( 40, 16, 8, 16 )
+region = Rect2( 40, 32, 8, 16 )
 
 [sub_resource type="AtlasTexture" id=13]
 atlas = ExtResource( 4 )
@@ -83,27 +83,27 @@ region = Rect2( 40, 48, 8, 16 )
 
 [sub_resource type="AtlasTexture" id=19]
 atlas = ExtResource( 4 )
-region = Rect2( 0, 32, 8, 16 )
+region = Rect2( 0, 16, 8, 16 )
 
 [sub_resource type="AtlasTexture" id=20]
 atlas = ExtResource( 4 )
-region = Rect2( 8, 32, 8, 16 )
+region = Rect2( 8, 16, 8, 16 )
 
 [sub_resource type="AtlasTexture" id=21]
 atlas = ExtResource( 4 )
-region = Rect2( 16, 32, 8, 16 )
+region = Rect2( 16, 16, 8, 16 )
 
 [sub_resource type="AtlasTexture" id=22]
 atlas = ExtResource( 4 )
-region = Rect2( 24, 32, 8, 16 )
+region = Rect2( 24, 16, 8, 16 )
 
 [sub_resource type="AtlasTexture" id=23]
 atlas = ExtResource( 4 )
-region = Rect2( 32, 32, 8, 16 )
+region = Rect2( 32, 16, 8, 16 )
 
 [sub_resource type="AtlasTexture" id=24]
 atlas = ExtResource( 4 )
-region = Rect2( 40, 32, 8, 16 )
+region = Rect2( 40, 16, 8, 16 )
 
 [sub_resource type="SpriteFrames" id=25]
 animations = [ {
@@ -114,8 +114,8 @@ animations = [ {
 }, {
 "frames": [ SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ), SubResource( 11 ), SubResource( 12 ) ],
 "loop": true,
-"name": "run",
-"speed": 12.0
+"name": "idle_boots",
+"speed": 5.0
 }, {
 "frames": [ SubResource( 13 ), SubResource( 14 ), SubResource( 15 ), SubResource( 16 ), SubResource( 17 ), SubResource( 18 ) ],
 "loop": true,
@@ -124,8 +124,8 @@ animations = [ {
 }, {
 "frames": [ SubResource( 19 ), SubResource( 20 ), SubResource( 21 ), SubResource( 22 ), SubResource( 23 ), SubResource( 24 ) ],
 "loop": true,
-"name": "idle_boots",
-"speed": 5.0
+"name": "run",
+"speed": 12.0
 } ]
 
 [sub_resource type="CapsuleShape2D" id=26]
@@ -173,6 +173,7 @@ radius = 2.57189
 position = Vector2( 274.472, 128.527 )
 collision_layer = 2
 script = ExtResource( 1 )
+jump_speed = 155.0
 friction = 0.9
 
 [node name="Sprite" type="Sprite" parent="."]
@@ -186,7 +187,7 @@ vframes = 8
 position = Vector2( 0, -4 )
 frames = SubResource( 25 )
 animation = "idle"
-frame = 1
+frame = 2
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -237,7 +238,6 @@ bus = "Effects"
 
 [node name="HitGroundSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 7 )
-volume_db = -12.0
 bus = "Effects"
 
 [node name="BalloonPusher" type="KinematicBody2D" parent="."]
@@ -247,3 +247,7 @@ collision_mask = 128
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BalloonPusher"]
 position = Vector2( 0, -2 )
 shape = SubResource( 34 )
+
+[node name="CameraShakeTimer" type="Timer" parent="."]
+wait_time = 0.25
+one_shot = true

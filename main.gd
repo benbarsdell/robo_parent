@@ -1,12 +1,19 @@
 extends Node
 
 
+const MAX_RECORDED_FRAMES := 1 * 60 * 60 # 1 minute
 var recorded_frames = []
 var num_ticks := 0
 var completion_num_ticks := 0
 
 
 func _record_state():
+	if recorded_frames.size() >= 2 * MAX_RECORDED_FRAMES:
+		# TODO: Use an efficient pop_front() implementation here instead.
+		for i in range(MAX_RECORDED_FRAMES):
+			recorded_frames[i] = recorded_frames[i + MAX_RECORDED_FRAMES]
+		recorded_frames.resize(recorded_frames.size() - MAX_RECORDED_FRAMES)
+		return
 	var frame_state := {}
 	for node in get_tree().get_nodes_in_group("recordable"):
 		frame_state[node.get_instance_id()] = {
@@ -15,19 +22,23 @@ func _record_state():
 	recorded_frames.append(frame_state)
 
 
-func _restore_state():
+func _restore_state(speed := 1):
 	if recorded_frames.empty():
 		return
-	var frame_state = recorded_frames.pop_back()
-	for node_instance_id in frame_state:
-		var node_info: Dictionary = frame_state[node_instance_id]
-		var node := instance_from_id(node_instance_id)
-		if not node:
-			print("NODE NOT FOUND: ", node_instance_id)
-		if not node.get_parent():
-			Globals.restore_node(node_instance_id)
-			
-		node.set_state(node_info.state)
+	var frame_state: Dictionary
+	for i in range(speed):
+		if recorded_frames.empty():
+			break
+		frame_state = recorded_frames.pop_back()
+		for node_instance_id in frame_state:
+			var node_info: Dictionary = frame_state[node_instance_id]
+			var node := instance_from_id(node_instance_id)
+			if not node:
+				print("NODE NOT FOUND: ", node_instance_id)
+			if not node.get_parent():
+				Globals.restore_node(node_instance_id)
+				
+			node.set_state(node_info.state)
 	
 	for node in get_tree().get_nodes_in_group("recordable"):
 		if not (node.get_instance_id() in frame_state):
@@ -55,7 +66,7 @@ func get_time_str(time_ms: int):
 
 func _process_rewind():
 	if Input.is_action_pressed("rewind"):
-		_restore_state()
+		_restore_state(2)
 	else:
 		_record_state()
 	# Disable physics processing of recordable nodes while replaying.
@@ -72,7 +83,12 @@ func _physics_process(_delta):
 		$OverlayLayer/TimeLabel.text = get_time_str(current_playtime_ms())
 	$OverlayLayer/TimeLabel.visible = Globals.show_timer
 	
-	#_process_rewind()
+	if Globals.cheat_mode:
+		_process_rewind()
+		$OverlayLayer/CheatModeLabel.visible = true
+		Globals.cheat_mode_used = true
+	else:
+		$OverlayLayer/CheatModeLabel.visible = false
 
 
 #func _unhandled_key_input(event):

@@ -30,6 +30,8 @@ func _physics_process(delta):
 func _on_ProjectileSensor_body_entered(body):
 	Globals.remove_node(body)
 	if timer.is_stopped():
+	#if true: # TODO: Try to make this work. The problem is the toggleable gets
+	#                   stuck in the wrong mode when the target is shot twice.
 		timer.start()
 		emit_signal("activate")
 		if toggleable:
